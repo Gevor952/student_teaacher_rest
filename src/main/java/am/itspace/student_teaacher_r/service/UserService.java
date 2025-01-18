@@ -6,6 +6,7 @@ import am.itspace.student_teaacher_r.entity.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -17,5 +18,5 @@ public interface UserService {
 
     void delete(int id);
 
-    User save(SaveUserRequest saveUserRequest);
+    Optional<UserDTO> save(SaveUserRequest saveUserRequest);
 }

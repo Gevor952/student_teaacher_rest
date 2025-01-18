@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -51,7 +52,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(SaveUserRequest saveUserRequest) {
-        return userRepository.save(UserConverter.fromSaveUserRequestToUser(saveUserRequest));
+    public Optional<UserDTO> save(SaveUserRequest saveUserRequest) {
+        if(userRepository.findByEmail(saveUserRequest.getEmail()) == null) {
+            return Optional.ofNullable(UserConverter.formUserToUserDTO(userRepository.save(UserConverter.fromSaveUserRequestToUser(saveUserRequest))));
+        }
+        return Optional.empty();
     }
 }
