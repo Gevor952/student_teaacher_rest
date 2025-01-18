@@ -62,8 +62,10 @@ public class UserServiceImpl implements UserService {
                 && (saveUserRequest.getName() != null)
                 && !saveUserRequest.getName().isEmpty()
                 && (saveUserRequest.getSurname() != null)
+                && !saveUserRequest.getSurname().isEmpty()
                 && (saveUserRequest.getRole() != null)
                 && (saveUserRequest.getEmail() != null)
+                && !saveUserRequest.getEmail().isEmpty()
                 && (userRepository.findByEmail(saveUserRequest.getEmail()) == null);
     }
 }
