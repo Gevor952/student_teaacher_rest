@@ -4,9 +4,8 @@ package am.itspace.student_teaacher_r.converter;
 import am.itspace.student_teaacher_r.dto.SaveUserRequest;
 import am.itspace.student_teaacher_r.dto.UserDTO;
 import am.itspace.student_teaacher_r.entity.User;
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class UserConverter {
 
     static public UserDTO formUserToUserDTO(User user) {
