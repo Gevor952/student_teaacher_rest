@@ -7,12 +7,10 @@ import am.itspace.student_teaacher_r.entity.User;
 import am.itspace.student_teaacher_r.repository.UserRepository;
 import am.itspace.student_teaacher_r.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -53,9 +51,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDTO> save(SaveUserRequest saveUserRequest) {
-        if(userRepository.findByEmail(saveUserRequest.getEmail()) == null) {
+        if (validateRequest(saveUserRequest)) {
             return Optional.ofNullable(UserConverter.formUserToUserDTO(userRepository.save(UserConverter.fromSaveUserRequestToUser(saveUserRequest))));
         }
         return Optional.empty();
+    }
+
+    private boolean validateRequest(SaveUserRequest saveUserRequest) {
+        return (saveUserRequest != null)
+                && (saveUserRequest.getName() != null)
+                && !saveUserRequest.getName().isEmpty()
+                && (saveUserRequest.getSurname() != null)
+                && (saveUserRequest.getRole() != null)
+                && (saveUserRequest.getEmail() != null)
+                && (userRepository.findByEmail(saveUserRequest.getEmail()) == null);
     }
 }
