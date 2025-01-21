@@ -5,6 +5,7 @@ import am.itspace.student_teaacher_r.dto.SaveCourseRequest;
 import am.itspace.student_teaacher_r.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class CourseEndpoint {
     private final CourseService courseService;
 
     @PostMapping("/courses")
-    public ResponseEntity<CourseDTO> save(@RequestBody SaveCourseRequest saveCourseRequest) {
+    public ResponseEntity<CourseDTO> save(@RequestBody @Validated SaveCourseRequest saveCourseRequest) {
         return ResponseEntity.ok(courseService.save(saveCourseRequest));
     }
 
@@ -32,11 +33,6 @@ public class CourseEndpoint {
 
     @DeleteMapping("/courses/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        if (courseService.findCourseById(id) == null) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
         courseService.delete(id);
         return ResponseEntity
                 .ok()
@@ -44,7 +40,7 @@ public class CourseEndpoint {
     }
 
     @PutMapping("/courses/{id}")
-    public ResponseEntity<CourseDTO> update(@PathVariable int id, @RequestBody SaveCourseRequest saveCourseRequest) {
+    public ResponseEntity<CourseDTO> update(@PathVariable int id, @RequestBody @Validated SaveCourseRequest saveCourseRequest) {
         return ResponseEntity.ok(courseService.update(id, saveCourseRequest));
     }
 

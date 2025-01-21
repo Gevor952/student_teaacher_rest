@@ -8,6 +8,7 @@ import am.itspace.student_teaacher_r.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,17 +31,12 @@ public class UserEndpoint {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> update(@RequestBody SaveUserRequest saveUserRequest, @PathVariable("id") int id) {
-        return  ResponseEntity.ok(userService.update(id, saveUserRequest));
+    public ResponseEntity<User> update(@RequestBody @Validated SaveUserRequest saveUserRequest, @PathVariable("id") int id) {
+        return ResponseEntity.ok(userService.update(id, saveUserRequest));
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id) {
-        if (userService.findUserDTOById(id) == null) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
         userService.delete(id);
         return ResponseEntity
                 .ok()
@@ -48,9 +44,8 @@ public class UserEndpoint {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserDTO> save(@RequestBody SaveUserRequest saveUserRequest) {
-        Optional<UserDTO> optionalUserDTO = userService.save(saveUserRequest);
-        return optionalUserDTO.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));
+    public ResponseEntity<UserDTO> save(@RequestBody @Validated SaveUserRequest saveUserRequest) {
+        return ResponseEntity.ok(userService.save(saveUserRequest));
 
     }
 

@@ -1,12 +1,17 @@
 package am.itspace.student_teaacher_r.service.impl;
 
-import am.itspace.student_teaacher_r.converter.CourseConverter;
-import am.itspace.student_teaacher_r.converter.UserConverter;
+
 import am.itspace.student_teaacher_r.dto.CourseDTO;
 import am.itspace.student_teaacher_r.dto.UserDTO;
 import am.itspace.student_teaacher_r.entity.CourseRegister;
+import am.itspace.student_teaacher_r.exception.CourseNotFoundException;
+import am.itspace.student_teaacher_r.exception.UserNotFoundException;
+import am.itspace.student_teaacher_r.mapper.CourseMapper;
+import am.itspace.student_teaacher_r.mapper.UserMapper;
 import am.itspace.student_teaacher_r.repository.CourseRegisterRepository;
 import am.itspace.student_teaacher_r.service.CourseRegisterService;
+import am.itspace.student_teaacher_r.service.CourseService;
+import am.itspace.student_teaacher_r.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,23 +23,33 @@ import java.util.List;
 public class CourseRegisterServiceImpl implements CourseRegisterService {
 
     private final CourseRegisterRepository courseRegisterRepository;
+    private final UserService userService;
+    private final CourseService courseService;
+    private final UserMapper userMapper;
+    private final CourseMapper courseMapper;
 
     @Override
     public List<CourseDTO> getCoursesByUserId(int userId) {
+        if(userService.findUserDTOById(userId) == null) {
+            throw new UserNotFoundException("User with id " + userId + "not found");
+        }
         List<CourseRegister> courseRegisters = courseRegisterRepository.findByUserId(userId);
         List<CourseDTO> courseDTOS = new ArrayList<>();
         for (CourseRegister courseRegister : courseRegisters) {
-            courseDTOS.add(CourseConverter.fromCourseToCourseDTO(courseRegister.getCourse()));
+            courseDTOS.add(courseMapper.toDto(courseRegister.getCourse()));
         }
         return courseDTOS;
     }
 
     @Override
     public List<UserDTO> getStudentsByCourseId(int id) {
+        if(courseService.findCourseById(id) == null) {
+            throw new CourseNotFoundException("Course with id " + id + "not found");
+        }
         List<CourseRegister> courseRegisters = courseRegisterRepository.findByCourseId(id);
         List<UserDTO> userDTOS = new ArrayList<>();
         for (CourseRegister courseRegister : courseRegisters) {
-            userDTOS.add(UserConverter.formUserToUserDTO(courseRegister.getUser()));
+            userDTOS.add(userMapper.toDTO(courseRegister.getUser()));
         }
         return userDTOS;
     }

@@ -18,5 +18,5 @@ public interface UserService {
 
     void delete(int id);
 
-    Optional<UserDTO> save(SaveUserRequest saveUserRequest);
+    UserDTO save(SaveUserRequest saveUserRequest);
 }
