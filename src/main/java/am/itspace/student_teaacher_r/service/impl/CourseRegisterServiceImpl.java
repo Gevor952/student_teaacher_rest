@@ -4,8 +4,6 @@ package am.itspace.student_teaacher_r.service.impl;
 import am.itspace.student_teaacher_r.dto.CourseDTO;
 import am.itspace.student_teaacher_r.dto.UserDTO;
 import am.itspace.student_teaacher_r.entity.CourseRegister;
-import am.itspace.student_teaacher_r.exception.CourseNotFoundException;
-import am.itspace.student_teaacher_r.exception.UserNotFoundException;
 import am.itspace.student_teaacher_r.mapper.CourseMapper;
 import am.itspace.student_teaacher_r.mapper.UserMapper;
 import am.itspace.student_teaacher_r.repository.CourseRegisterRepository;
@@ -30,9 +28,7 @@ public class CourseRegisterServiceImpl implements CourseRegisterService {
 
     @Override
     public List<CourseDTO> getCoursesByUserId(int userId) {
-        if(userService.findUserDTOById(userId) == null) {
-            throw new UserNotFoundException("User with id " + userId + "not found");
-        }
+        userService.findUserDTOById(userId);
         List<CourseRegister> courseRegisters = courseRegisterRepository.findByUserId(userId);
         List<CourseDTO> courseDTOS = new ArrayList<>();
         for (CourseRegister courseRegister : courseRegisters) {
@@ -43,9 +39,7 @@ public class CourseRegisterServiceImpl implements CourseRegisterService {
 
     @Override
     public List<UserDTO> getStudentsByCourseId(int id) {
-        if(courseService.findCourseById(id) == null) {
-            throw new CourseNotFoundException("Course with id " + id + "not found");
-        }
+        courseService.findCourseById(id);
         List<CourseRegister> courseRegisters = courseRegisterRepository.findByCourseId(id);
         List<UserDTO> userDTOS = new ArrayList<>();
         for (CourseRegister courseRegister : courseRegisters) {
